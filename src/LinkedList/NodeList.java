@@ -35,18 +35,26 @@ public class NodeList {
      * @description 指定位置新增一个链表节点
      */
     public boolean insertNode(int index,Node node){
+        //index在0到链表长度之间
         if(index < 0||index > length){
             System.out.println("插入点位置不合法！");
             return false;
         }
+        //遍历节点
+        //因为可能插入到头部之前，故从head开始遍历
+        //注意head不是第一个节点，只是一个指向第一个节点的指针
         Node temp = head;
         //遍历节点，index=0，则插入进链表最前面
+        //目的：找出插入位置的前一个节点
         while (temp.next!=null&&index!=0){
             temp = temp.next;
             index-- ;
         }
+        //待插入节点next和插入位置前一个节点的next一样
             node.next = temp.next;
+        //插入位置前一个节点的next赋值为待插入节点
             temp.next = node;
+            //插入后长度加一
             length++;
             return true;
     }
@@ -84,37 +92,44 @@ public class NodeList {
     /**
      * @description  链表反转
      */
-//    public NodeList reverse(){
-//        Node p = null;
-//        Node q = null;
-//        Node r = null;
-//        NodeList res = new NodeList();
-//        if(length < 2){
-//            p = head.next;
-//            res.head.next = p;
-//            return res;
-//        }
-//        p = head.next;
-//        q = p.next;
-//        while (length!=1){
-//            length--;
-//            //两个链表节点反转，记录后一个节点
-//            r = q.next;
-//            //链表节点反转
-//            q.next = p;
-//            //p移位
-//            p = q;
-//            //q移位
-//            q = r;
-//            //r移位
-//            if(r!=null) {
-//                r = r.next;
-//            }
-//        }
-//        res.head.next = q;
-//        res.length = this.length;
-//        return res;
-//    }
+    public NodeList reverse(){
+        //排除为空链表和只有一个节点的情况
+        if(head.next == null){
+            //空链表
+            return this;
+        }else {
+            //只有一个节点
+            if(head.next.next == null){
+                return this;
+            }
+        }
+       //节点，用来遍历
+        Node temp = head.next.next;
+        //节点，用来插入
+         Node insert = head.next.next;
+         //拷贝头节点
+        Node newEnd  = null;
+         try{
+             newEnd = (Node)head.next.clone();
+         }catch (CloneNotSupportedException e){
+             System.out.println(e.getMessage());
+         }
+         //将新的头节点插入头部,形成只有一个节点的链表
+        head.next = newEnd;
+         //头部的该节点反转后应在尾部，故next指针为null
+         newEnd.next = null;
+         //遍历链表并把每个节点均插入头部
+         while (temp!=null){
+             //赋值给暂存节点，用于插入
+             insert = temp;
+             //遍历节点赋值后任务完成，遍历下一个节点
+             temp = temp.next;
+             //暂存节点插入头部
+             insert.next = null;
+             insertNode(0,insert);
+         }
+        return this;
+    }
 
     public static void main(String[] args) {
         NodeList test = new NodeList();
@@ -122,8 +137,11 @@ public class NodeList {
         test.addNode(aNode);
         test.addNode(new Node(2));
         test.insertNode(2,new Node(3));
-        //System.out.println(test.reverse().length);
-       // test.reverse();
+
+        test.traverse();
+        System.out.println("遍历前后分割线----");
+        test.reverse().traverse();
+
 
     }
 }

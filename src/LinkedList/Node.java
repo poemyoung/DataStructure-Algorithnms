@@ -23,4 +23,5 @@ public class Node {
         a.next = this.next;
         return a;
     }
+
 }
