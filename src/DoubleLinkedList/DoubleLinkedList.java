@@ -42,12 +42,12 @@ public class DoubleLinkedList {
     /**
      * 插入算法
      */
-    public void addNode(int index,Object aValue){
+    public DoubleLinkedList addNode(int index,Object aValue){
         Node newNode = new Node(aValue);
         //0为插头后面，lenth为插尾后面
         if(index < 0||index > length){
             System.out.println("插入位置不合法！");
-            return;
+            return this;
         }
         //插入位置前和插入位置后的节点
         Node tempF = head;
@@ -65,6 +65,7 @@ public class DoubleLinkedList {
         tempA.prev = newNode;
         //插入完毕长度加一
         length++;
+        return this;
     }
 
     /**
@@ -83,15 +84,34 @@ public class DoubleLinkedList {
      * 双向链表中的两个节点交换
      * 蚂蚁金服面试
      */
-    public void switchNodes(int front,int after){
+    public DoubleLinkedList switchNodes(int front,int after){
         //判断前后位置是否一致
         if(front >= after||front < 1||after > length){
             System.out.println("交换节点位置有误");
-            return;
+            return this;
         }
         //遍历找到前节点和后节点
-        Node frontNode = head;
-        Node afterNode = head;
+        Node frontNode = head.next;
+        Node afterNode = head.next;
+        //相邻节点交换算法
+        if(after - front == 1){
+            //相邻节点交换算法
+            while (--front > 0){
+                frontNode = frontNode.next;
+            }
+            afterNode = frontNode.next;
+            //Step1更改两个非交换节点
+            frontNode.prev.next = afterNode;
+            afterNode.next.prev = frontNode;
+            //Step2更改两个交换节点
+            //记录两个交换节点前面一个节点
+            Node c = frontNode.prev;
+            frontNode.prev = afterNode;
+            frontNode.next = afterNode.next;
+            afterNode.prev = c;
+            afterNode.next = frontNode;
+            return this;
+        }
         //head.next为索引1的节点
         while (--front > 0){
             frontNode = frontNode.next;
@@ -101,6 +121,22 @@ public class DoubleLinkedList {
         }
         //节点交换算法
 
+        //记录前面节点的前后节点
+        Node frontNodeF = frontNode.prev;
+        Node frontNodeA = frontNode.next;
+        //Step1更改frontNode的左右节点
+        frontNodeF.next = afterNode;
+        frontNodeA.prev = afterNode;
+        //Step2更改afterNode的左右节点
+        afterNode.next.prev = frontNode;
+        afterNode.prev.next = frontNode;
+        //Step3更改frontNode的指针
+        frontNode.next = afterNode.next;
+        frontNode.prev = afterNode.prev;
+        //Step4更改afterNode指针
+        afterNode.next = frontNodeA;
+        afterNode.prev = frontNodeF;
+        return this;
     }
 
     public static void main(String[] args) {
@@ -114,9 +150,12 @@ public class DoubleLinkedList {
         Phone c = new Phone();
         c.setPeriod("高中");
         c.setName("小米");
+        Phone d = new Phone();
+        d.setName("oppor11");
+        d.setPeriod("大一大二大三");
         test.addNode(0,a);
         test.addNode(0,b);
         test.addNode(2,c);
-        test.traverse();
+        test.addNode(3,d).switchNodes(1,2).traverse();
     }
 }
