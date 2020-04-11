@@ -88,6 +88,71 @@ public class NodeList {
             System.out.println(temp.num);
         }
     }
+    /**
+     * 单链表交换两个节点
+     * 数据结构与算法习题
+     */
+    public NodeList switchNode(int front,int after){
+        //临时节点，用于遍历
+        Node temp = head;
+        //前交换节点
+        Node frontNode = null;
+        Node afterNode = null;
+        //判断输入是否符合要求
+        if(front < 1||front > after||after > length){
+            System.out.println("数组下标不对，无法进行交换");
+        }
+        //相邻两个节点的交换算法
+        if(after - front == 1){
+            //找到待交换节点的前一个节点
+            front = front - 1;
+            while (temp.next!= null&&front > 0){
+                temp = temp.next;
+                //找到该节点
+               front--;
+            }
+            frontNode = temp.next;
+            afterNode = temp.next.next;
+            //链表节点交换算法
+            temp.next = afterNode;
+            frontNode.next = afterNode.next;
+            afterNode.next = frontNode;
+            return this;
+        }
+        //非相邻两个节点进行交换
+        else {
+            //找前一个节点
+            front--;
+            after--;
+            //前面交换节点的前面节点
+            Node frontFront = null;
+            //后面交换节点的前面节点
+            Node afterFront = null;
+            while (temp.next!=null&&(front > 0||after > 0)){
+                //找到了前一个节点
+                if(front == 0){
+                    frontFront = temp;
+                    frontNode = temp.next;
+                }
+                //节点移动
+                temp = temp.next;
+                front--;
+                after--;
+            }
+            afterFront = temp;
+            afterNode = temp.next;
+            Node afterAfter = afterNode.next;
+            System.out.println(frontFront.num+""+frontNode.num+afterFront.num+afterNode.num);
+            //交换
+            //先交换两个节点本身
+            afterNode.next = frontNode.next;
+            frontNode.next = afterAfter;
+            //再交换节点前后的节点
+            frontFront.next = afterNode;
+            afterFront.next = frontNode;
+            return this;
+        }
+    }
 
     /**
      * @description  链表反转
@@ -138,8 +203,8 @@ public class NodeList {
         test.addNode(aNode);
         test.addNode(new Node(2));
         test.insertNode(2,new Node(3));
-
-        test.traverse();
+        test.addNode(new Node(4)) ;
+        test.switchNode(1,3).traverse();
         System.out.println("遍历前后分割线----");
         test.reverse().traverse();
 
