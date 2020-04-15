@@ -1,5 +1,8 @@
 package LinkedList;
 
+import javax.print.attribute.standard.NumberUp;
+import java.util.Map;
+
 /**
  * @description 链表节点类
  */
@@ -101,6 +104,7 @@ public class NodeList {
         //判断输入是否符合要求
         if(front < 1||front > after||after > length){
             System.out.println("数组下标不对，无法进行交换");
+            return this;
         }
         //相邻两个节点的交换算法
         if(after - front == 1){
@@ -197,17 +201,121 @@ public class NodeList {
         return this;
     }
 
+    /**
+     * 单链表反转再次实现：使用递归方式
+     */
+    private Node rerRecursion(Node nowNode){
+        //基准条件
+        if(nowNode.next == null){
+            //该节点作为第一个节点
+            head.next = nowNode;
+            return nowNode;
+        }
+        //递归
+        //寻找下一个节点
+        Node temp = rerRecursion(nowNode.next);
+        //nowNode的下一个节点已经找到，不再需要nowNode.next
+        nowNode.next = null;
+        //使它的下一个节点指向当前节点
+        temp.next = nowNode;
+        //返回当前节点给上一个node进行处理
+        return nowNode;
+    }
+    /**
+     * 单链表反转启动方法
+     */
+    public NodeList reverseStart(){
+        rerRecursion(head.next);
+        return this;
+    }
+
+
+    /**
+     * 找出链表倒数第k个节点
+     * @param k
+     */
+    public Node findReverseSpec(int k){
+        if(k > length){
+            System.out.println("长度不足！");
+            return null;
+        }
+        //两个节点指针进行移动
+        Node front = head.next;
+        Node after = head.next;
+        //拉出k - 1 个距离
+        for (int i = 1;i < k;i++){
+            after = after.next;
+        }
+        //一起循环
+        while (after.next!=null){
+            after = after.next;
+            front = front.next;
+        }
+        return front;
+    }
+
+    /**
+     * 找出链表中间元素
+     */
+    public Node findMiddle(){
+        //使用一个节点走一位，另一个节点走两位的方式找到中间节点
+        Node front = head.next;
+        Node after = head.next;
+        while (after!= null&&after.next!=null){
+            after = after.next.next;
+            front = front.next;
+        }
+        return front;
+    }
+
+    /**
+     * 链表排序（冒泡排序）
+     */
+    public NodeList sort(){
+        Node temp = head.next;
+        //冒泡排序的终点（终点及以后是已经排好的元素）
+        Node end = null;
+        //空链表和元素为1的链表链表不排序
+        if(length == 0||length == 1){
+            return this;
+        }
+        //排序
+        //外循环改终点
+        //记录位置
+        int position;
+      while (end!=head.next){
+          //外层每次temp都从第一个节点开始
+          temp = head.next;
+          //内层循环做交换
+          position = 1;
+          while (temp.next!=end){
+              //如果需要做交换
+              if (temp.num > temp.next.num){
+                  switchNode(position,position+1);
+              }else {
+                  //不需要做交换
+                  temp = temp.next;
+              }
+              position++;
+          }
+          end = temp;
+      }
+        return this;
+    }
     public static void main(String[] args) {
         NodeList test = new NodeList();
-        Node aNode = new Node(1);
-        test.addNode(aNode);
-        test.addNode(new Node(2));
-        test.insertNode(2,new Node(3));
-        test.addNode(new Node(4)) ;
-        test.switchNode(1,3).traverse();
-        System.out.println("遍历前后分割线----");
-        test.reverse().traverse();
-
+       test.addNode(new Node(10));
+       test.addNode(new Node(2));
+       test.addNode(new Node(5));
+       test.addNode(new Node(9));
+       test.addNode(new Node(4));
+        test.addNode(new Node(13));
+        test.addNode(new Node(1));
+      // test.reverseStart().traverse();
+        test = test.sort();
+        test.traverse();
+        System.out.println("------------");
+        System.out.println(test.findMiddle().num);
 
     }
 }
