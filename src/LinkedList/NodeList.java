@@ -2,6 +2,7 @@ package LinkedList;
 
 import javax.print.attribute.standard.NumberUp;
 import java.util.Map;
+import java.util.TreeSet;
 
 /**
  * @description 链表节点类
@@ -267,7 +268,6 @@ public class NodeList {
         }
         return front;
     }
-
     /**
      * 链表排序（冒泡排序）
      */
