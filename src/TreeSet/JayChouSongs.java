@@ -1,4 +1,4 @@
-package MyTreeSet;
+package TreeSet;
 import java.lang.Comparable;
 
 /**

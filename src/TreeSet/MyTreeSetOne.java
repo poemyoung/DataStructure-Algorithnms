@@ -1,8 +1,4 @@
-package MyTreeSet;
-
-import com.sun.source.tree.Tree;
-
-import javax.swing.tree.TreeCellRenderer;
+package TreeSet;
 import java.util.*;
 
 /**
@@ -400,7 +396,7 @@ public class MyTreeSetOne<E extends Comparable<? super E>>{
      * 测试
      */
     public static void main(String[] args) {
-        MyTreeSetOne<JayChouSongs> test = new MyTreeSetOne<>();
+        MyTreeSetOne<JayChouSongs> test = new MyTreeSetOne<JayChouSongs>();
         test.insert(new JayChouSongs(5,"晴天"));
         test.insert(new JayChouSongs(3,"说好不哭"));
         test.insert(new JayChouSongs(10,"等你下课"));
