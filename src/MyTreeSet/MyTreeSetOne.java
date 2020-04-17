@@ -47,6 +47,7 @@ public class MyTreeSetOne<E extends Comparable<? super E>>{
         private boolean isEnd;
         private TreeNode<E>current;
         private int expectedModCount;
+        private TreeNode<E>lastAccess;
 
         public MyIterator() {
             expectedModCount = modCount;
@@ -59,15 +60,52 @@ public class MyTreeSetOne<E extends Comparable<? super E>>{
             return !isEnd;
         }
 
+        /**
+         *不能用递归
+         *思路：当节点往下走时（根为上），一定是去寻找右子树最小节点
+         * 若节点往上走，分两种情况
+         * 1，节点从右子树往上走，表示走到的节点不再需要遍历了,右子树也不需要遍历
+         * 2，节点从左子树往上走，表示走到的节点仍需要遍历，右子树也需要
+         * 取一个节点记录节点的前一个节点即可判断是哪种情况
+         */
         @Override
         public E next() {
+            TreeNode<E> returnNode = current;
             //中序遍历输出结果
             if(modCount!=expectedModCount){
                 throw new ConcurrentModificationException();
             }
-            //不能用递归
-           // while ()
-            return null;
+            //树为空
+            if(root == null){
+                return null;
+            }
+            //树不为空
+            //当节点往上走且走到根的father时结束
+            if(current == null){
+                isEnd = true;
+            }
+            //往右走
+            if(current.rightChild!=null && current.rightChild!=lastAccess){
+                current = findMin(current.rightChild);
+            }else {
+                //往上走,从右子树一直往上走
+                while (current.rightChild == null || current.rightChild == lastAccess) {
+                    //走一步赋一次值，直到上次的节点不是它的右子树
+                    lastAccess = current;
+                    current = current.father;
+                    //已经成为了根的father，即为null,已经结束了
+                    if(current == null){
+                        isEnd = true;
+                        break;
+                    }
+                    //从左子树上的来就遍历该节点
+                    if (current.leftChild == lastAccess) {
+                        break;
+                    }
+
+                }
+            }
+            return returnNode.value;
         }
 
         @Override
@@ -350,7 +388,12 @@ public class MyTreeSetOne<E extends Comparable<? super E>>{
             node.rightChild = null;
             node.value = null;//Help GC
         }
-
+        }
+    /**
+     * 返回迭代器
+     */
+    public Iterator<E> iterator(){
+        return new MyIterator();
     }
 
     /**
@@ -366,11 +409,15 @@ public class MyTreeSetOne<E extends Comparable<? super E>>{
         test.insert(new JayChouSongs(8,"算什么男人"));
         test.insert(new JayChouSongs(8,"算什么男人"));
         test.insert(new JayChouSongs(18,"算什么男人"));
+        test.insert(new JayChouSongs(4,"回到过去"));
         test.printTree();
         System.out.println(test.contains(new JayChouSongs(5,"说好的幸福呢")));
         System.out.println(test.findMin().getSongName());
         System.out.println(test.findMax().getSongName());
         System.out.println(test.remove(new JayChouSongs(18,"等你下课")));
-        test.printTree();
+        Iterator<JayChouSongs> it = test.iterator();
+       while (it.hasNext()){
+           System.out.println(it.next());
+       }
     }
 }
