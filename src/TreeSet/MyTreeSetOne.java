@@ -104,10 +104,6 @@ public class MyTreeSetOne<E extends Comparable<? super E>>{
             return returnNode.value;
         }
 
-        @Override
-        public void remove() {
-
-        }
     }
     /**
      * 构造方法：带参数
