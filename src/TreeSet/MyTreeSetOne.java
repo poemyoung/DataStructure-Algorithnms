@@ -389,6 +389,55 @@ public class MyTreeSetOne<E extends Comparable<? super E>>{
     }
 
     /**
+     * 快手算法面试题：找一棵树距离根节点最深的叶子节点的集合
+     * from NowCoder
+     */
+    //一个栈记录深度
+    Stack<Integer>depth = new Stack<>();
+    //一个栈记录节点集合
+    Stack<E>nodes = new Stack<>();
+    public Set<E> findDeepest(){
+        if(root == null){
+            return null;
+        }
+        findDeepest(root,0);
+        Set<E> aSet = new HashSet<>(nodes);
+        return aSet;
+    }
+    private void findDeepest(TreeNode<E> node,int deep){
+        //基准条件
+        if(node.rightChild == null&&node.leftChild == null){
+            //表示叶节点
+            if(depth.isEmpty()){
+                //空栈直接放进元素
+                nodes.push(node.value);
+                depth.push(deep);
+            }else if(depth.peek() > deep){
+                //深度非最大深度
+            }else if(depth.peek() < deep){
+                //栈顶深度不是最大深度
+                while (!depth.isEmpty() && depth.peek() < deep){
+                    depth.pop();
+                    nodes.pop();
+                }
+                if(depth.isEmpty()||depth.peek() == deep){
+                    depth.push(deep);
+                    nodes.push(node.value);
+                }
+            }else {
+                depth.push(deep);
+                nodes.push(node.value);
+            }
+        }
+        else {
+            //递归条件
+            if(node.leftChild !=null)
+            findDeepest(node.leftChild, deep + 1);
+            if(node.rightChild!=null)
+            findDeepest(node.rightChild, deep + 1);
+        }
+    }
+    /**
      * 测试
      */
     public static void main(String[] args) {
@@ -403,13 +452,11 @@ public class MyTreeSetOne<E extends Comparable<? super E>>{
         test.insert(new JayChouSongs(18,"算什么男人"));
         test.insert(new JayChouSongs(4,"回到过去"));
         test.printTree();
-        System.out.println(test.contains(new JayChouSongs(5,"说好的幸福呢")));
-        System.out.println(test.findMin().getSongName());
-        System.out.println(test.findMax().getSongName());
-        System.out.println(test.remove(new JayChouSongs(18,"等你下课")));
-        Iterator<JayChouSongs> it = test.iterator();
-       while (it.hasNext()){
-           System.out.println(it.next());
-       }
+        Set<JayChouSongs> a =test.findDeepest();
+        Iterator<JayChouSongs> b = a.iterator();
+        while (b.hasNext()){
+            System.out.println(b.next());
+        }
+
     }
 }
