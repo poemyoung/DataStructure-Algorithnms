@@ -1,37 +1,15 @@
-import org.w3c.dom.stylesheets.LinkStyle;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
-
-public class StudyCollection {
-    int modCount = 0;
-   public class test{
-       int expectedModCount = modCount;
-       public boolean jud(){
-           if(expectedModCount == modCount){
-               return true;
-           }else {
-               return false;
-           }
-       }
-   }
-    public test getInstance(){
-        return new test();
-    }
-   public void add(){
-       modCount++;
-   }
-
+class StudyCollection{
     public static void main(String[] args) {
-       StudyCollection study = new StudyCollection();
-       StudyCollection.test test = study.getInstance();
-       study.add();
-        System.out.println(test.jud());
-        ArrayList<Integer> a = new ArrayList<>();
-        a.add(1);
-        Iterator<Integer> it = a.iterator();
-        while (it.hasNext()) {
-            it.remove();
-            System.out.println(it.next());
-        }
+        Map<Long,String>test = new HashMap();
+        test.put(1L,"1");
+        System.out.println(test.get(1L));
+        System.out.println();
+        final List<Integer>a = new ArrayList<>();
+
     }
 }
