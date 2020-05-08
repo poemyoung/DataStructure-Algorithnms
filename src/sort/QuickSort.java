@@ -40,6 +40,7 @@ public class QuickSort {
                 j--;
             }
         }
+        //i,j之间差1或者是i ==j
         //对左边和右边进行该操作
         if(j > l){
             sort(arr,l,j);
